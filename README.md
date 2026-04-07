@@ -1,4 +1,4 @@
-# Headless Ubuntu Server Setup
+# Headless Ubuntu Private Server Setup
 
 A complete setup for running an **Ubuntu server in headless mode** with:
 
