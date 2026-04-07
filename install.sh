@@ -56,21 +56,27 @@ sudo systemctl enable --now tailscaled
 # ---------------------------------------------
 # Disable Sleep / Suspend (Headless Mode)
 # ---------------------------------------------
+
 echo "🛑 Disabling sleep and suspend..."
 
+# Disable sleep targets (safe)
 sudo systemctl mask sleep.target suspend.target hibernate.target hybrid-sleep.target
 
-sudo sed -i 's/^#HandleSuspendKey=.*/HandleSuspendKey=ignore/' /etc/systemd/logind.conf
-sudo sed -i 's/^#HandleLidSwitch=.*/HandleLidSwitch=ignore/' /etc/systemd/logind.conf
-sudo sed -i 's/^#HandleHibernateKey=.*/HandleHibernateKey=ignore/' /etc/systemd/logind.conf
+# Safely write logind config (overwrite cleanly)
+sudo tee /etc/systemd/logind.conf > /dev/null <<EOF
+[Login]
+HandleSuspendKey=ignore
+HandleLidSwitch=ignore
+HandleHibernateKey=ignore
+EOF
 
-sudo systemctl restart systemd-logind
-
+# Apply changes safely
+sudo reboot
 # ---------------------------------------------
 # Final Status Check
 # ---------------------------------------------
 echo "--------------------------------------"
-echo "✅ INSTALLATION COMPLETE"
+echo " INSTALLATION COMPLETE"
 echo "--------------------------------------"
 
 echo "🔐 SSH status:"
